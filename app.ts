@@ -10,4 +10,4 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
 });
 // done! we export it so we can start the site in start.js
-module.exports = app;
+export {app};

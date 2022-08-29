@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-mongoose.Promise = global.Promise;
 const validator = require("validator");
 const userSchema = new Schema({
   email: {
@@ -14,4 +13,4 @@ const userSchema = new Schema({
   name: { type: "string", required: "Please enter a valid name", trim: true },
 });
 
-module.exports = mongoose.model("User", userSchema);
+export const model = mongoose.model("User", userSchema)

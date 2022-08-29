@@ -6,4 +6,4 @@ const login = async (req : Request, res : Response) => {
     res.json({route: "hit"})
 }
 
-module.exports = {login}
+export {login}
