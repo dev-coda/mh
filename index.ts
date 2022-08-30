@@ -1,33 +1,17 @@
-import { Schema, model, connect } from "mongoose";
+import { connect } from "mongoose";
+import {Role} from "./models/Role";
+import {Error} from "mongoose";
 
 // import environmental variables from our variables.env file
 require("dotenv").config({ path: "variables.env" });
 (() => {
-  interface IUser {
-    name: string;
-    email: string;
-    avatar?: string;
-  }
-
-  const userSchema = new Schema<IUser>({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    avatar: String,
-  });
   // Connect to our Database and handle any bad connections
-
-  const User = model<IUser>("User", userSchema);
-
   async function run() {
-    await connect(process.env.DATABASE as string);
-    const user = new User({
-      name: "Bill",
-      email: "bill@initech.com",
-      avatar: "https://i.imgur.com/dM7Thhn.png",
-    });
-    await user.save();
-
-    console.log(user.email);
+    await connect(process.env.DATABASE as string).then(() => {
+      console.log("connected")
+      initial()
+      }
+    );
   }
 
   run().catch((err) => {
@@ -41,6 +25,42 @@ require("dotenv").config({ path: "variables.env" });
   // Start our app!
   const { app } = require("./app.ts");
   app.set("port", process.env.PORT || 7777);
+
+ const initial = ()=> {Role.estimatedDocumentCount((err: Error, count: number) => {
+  if (!err && count === 0) {
+    new Role({
+      name: "user"
+    }).save(err => {
+      if (err) {
+        console.log("error", err);
+      }
+
+      console.log("added 'user' to roles collection");
+    });
+
+    new Role({
+      name: "moderator"
+    }).save(err => {
+      if (err) {
+        console.log("error", err);
+      }
+
+      console.log("added 'moderator' to roles collection");
+    });
+
+    new Role({
+      name: "admin"
+    }).save(err => {
+      if (err) {
+        console.log("error", err);
+      }
+
+      console.log("added 'admin' to roles collection");
+    });
+  }
+});}
+
+
   const server = app.listen(app.get("port"), () => {
     console.log(`Express running → PORT ${server.address().port}`);
   });

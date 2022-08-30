@@ -1,16 +1,19 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const validator = require("validator");
-const userSchema = new Schema({
-  email: {
-    type: "string",
-    unique: true,
-    lowercase: true,
-    trim: true,
-    validate: [validator.isEmail, "Invalid email address"],
-    required: "Please enter a valid email address",
-  },
-  name: { type: "string", required: "Please enter a valid name", trim: true },
+import {Schema, model} from "mongoose"
+
+interface IUser {
+  username: string;
+  email: string;
+  password: string;
+  roles: [{type: Schema.Types.ObjectId, ref: "Role"}]
+}
+
+const userSchema = new Schema<IUser>({
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  password: {type: String, required: true},
+  roles: [{type: Schema.Types.ObjectId, ref: "Role"}]
 });
 
-export const model = mongoose.model("User", userSchema)
+
+const User = model<IUser>("User", userSchema);
+export {User} 
